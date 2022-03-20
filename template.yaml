@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  household-api
+
+  Sample SAM Template for household-api
+
+Parameters:
+  DBHost:
+    Type: String
+  DBPort:
+    Type: String
+  DBUser:
+    Type: String  
+  DBPassword:
+    Type: String
+  DBName:
+    Type: String
+Globals:
+  Function:
+    Timeout: 3
+    Environment:
+      Variables:
+        DBHost: !DBHost
+        DBPort: !DBPort
+        DBUser: !DBName
+        DBPassword: !DBPassword
+        DBName: !DBName
+Resources:
+  HouseHoldAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: ApiGateway-Api
+      StageName: v1
+  ListRevenueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/
+      Handler: lambda.list_revenue
+      Runtime: python3.9
+      Events:
+        ListRevenueEvent:
+          Type: Api
+          Properties:
+            Path: /revenues
+            Method: get
+            RestApiId: !Ref HouseHoldAPI
+  PutRevenueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/
+      Handler: lambda.put_revenue
+      Runtime: python3.9
+      Events:
+        PutRevenueEvent:
+          Type: Api
+          Properties:
+            Path: /revenues
+            Method: put
+            RestApiId: !Ref HouseHoldAPI
+  ListRevenueCategoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/
+      Handler: lambda.list_revenue_category
+      Runtime: python3.9
+      Events:
+        PutExpenseEvent:
+          Type: Api
+          Properties:
+            Path: /revenue-categories
+            Method: get
+            RestApiId: !Ref HouseHoldAPI
+  
+  ListExpenseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/
+      Handler: lambda.list_expense
+      Runtime: python3.9
+      Events:
+        ListExpenseEvent:
+          Type: Api
+          Properties:
+            Path: /expenses
+            Method: get
+            RestApiId: !Ref HouseHoldAPI
+  PutExpenseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/
+      Handler: lambda.put_expense
+      Runtime: python3.9
+      Events:
+        PutExpenseEvent:
+          Type: Api
+          Properties:
+            Path: /expenses
+            Method: put
+            RestApiId: !Ref HouseHoldAPI
+  ListExpenseCategoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/
+      Handler: lambda.list_expense_category
+      Runtime: python3.9
+      Events:
+        PutExpenseEvent:
+          Type: Api
+          Properties:
+            Path: /expense-categories
+            Method: get
+            RestApiId: !Ref HouseHoldAPI
